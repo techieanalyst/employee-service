@@ -1,0 +1,15 @@
+[
+    {
+        "name": "Vaughan",
+        "joindate": "10/19/2017",
+        "company": "Praesent Luctus Foundation",
+        "email": "tempus.scelerisque.lorem@egestasblandit.co.uk",
+        "phone": "1-365-251-2279",
+        "salary": 4754,
+        "address": {
+            "street": "4428 Proin Rd.",
+            "city": "Verrayes",
+            "zipcode": "7251"
+        }
+    }
+]

@@ -18,6 +18,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -37,6 +38,7 @@ public class EmployeeServiceExceptionHandler {
 
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler({HttpMessageNotReadableException.class, JsonMappingException.class, JsonParseException.class, IOException.class})
+	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleBadRequest(final Exception e) {
 //		log.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", "See logs for more details");
@@ -45,6 +47,7 @@ public class EmployeeServiceExceptionHandler {
 	
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler({EmployeeQueryException.class})
+	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleEmployeeQueryException(final EmployeeQueryException e) {
 //		log.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", e.getLocalizedMessage());
@@ -53,6 +56,7 @@ public class EmployeeServiceExceptionHandler {
 	
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler({MaxUploadSizeExceededException.class})
+	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleMaxUploadSizeExceededException(final MaxUploadSizeExceededException e) {
 //		log.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", e.getLocalizedMessage());
@@ -61,15 +65,17 @@ public class EmployeeServiceExceptionHandler {
 	
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler({MethodArgumentTypeMismatchException.class})
+	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
 //		log.error("Error occurred while processing the request", e);
-		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", e.getLocalizedMessage());
+		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", "invalid input parameter");
 		return ResponseEntity.badRequest().body(apiError);
 	}
 	
 	@ResponseStatus(INTERNAL_SERVER_ERROR)
 	@ExceptionHandler({InvalidDataAccessResourceUsageException.class, DataIntegrityViolationException.class})
-	public ResponseEntity<? extends WebServiceResponse> handleInternalServerErrorExceptions(final MethodArgumentTypeMismatchException e) {
+	@ResponseBody
+	public ResponseEntity<? extends WebServiceResponse> handleInternalServerErrorExceptions(final Exception e) {
 //		log.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR, "Error occurred due to invalid request", "See logs for more details");
 		return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(apiError);
@@ -77,6 +83,7 @@ public class EmployeeServiceExceptionHandler {
 	
 	@ResponseStatus(BAD_REQUEST)
 	@ExceptionHandler({MethodArgumentNotValidException.class, EmployeeValidationException.class})
+	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleConstraintValidationException(final Exception ex) {
 //		log.error("Error occurred while processing the request", e);
 		List<String> errors = new ArrayList<String>();

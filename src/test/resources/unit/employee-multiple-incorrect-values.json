@@ -1,0 +1,25 @@
+[
+    {
+        "name": "Vaughan",
+        "joindate": "10/19/2017",
+        "age": 23,
+        "company": "Praesent Luctus Foundation",
+        "email": "tempus.scelerisque.loremegestasblandit.co.uk",
+        "phone": "1-365-251-2279",
+        "salary": 4754,
+        "address": {
+            "street": "4428 Proin Rd.",
+            "city": "Verrayes",
+            "zipcode": "7251"
+        }
+    },
+    {
+        "name": "Caleb",
+        "joindate": "08/16/2017",
+        "age": 23,
+        "company": "Sociis Natoque Penatibus Institute",
+        "email": "sem.semper@adipiscinglacus.org",
+        "phone": "1-910-363-54716",
+        "salary": 4017
+    }
+]
