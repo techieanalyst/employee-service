@@ -1,0 +1,45 @@
+spring:
+  application: 
+   name: Employee microservice
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+  jackson:
+    fail-on-unknown-properties: true
+    default-property-inclusion: NON_NULL
+    serialization:
+      indent_output: true
+
+server:
+  servlet:
+    context-path: /employee-service
+    
+datasource:
+  main:
+    driver: org.h2.Driver
+    jdbc-url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+
+logging:
+  level:
+    com.sgp.employeeservice: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["health","info","metrics"]
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      simple:
+        enabled: true
+        mode: cumulative

@@ -5,5 +5,9 @@ CREATE TABLE employees (
 	company varchar,
 	email varchar,
 	phone varchar,
-	salary decimal
+	salary decimal(20,2),
+	street varchar,
+	city varchar,
+	zipcode varchar,
+	PRIMARY KEY(name, age)
 );

@@ -11,8 +11,6 @@ import javax.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class ValidList<E> implements List<E> {
 
 	@Valid
@@ -141,4 +139,12 @@ public class ValidList<E> implements List<E> {
 		return list.subList(fromIndex, toIndex);
 	}
 
+	public List<E> getList() {
+		return list;
+	}
+
+	public void setList(List<E> list) {
+		this.list = list;
+	}
+	
 }
