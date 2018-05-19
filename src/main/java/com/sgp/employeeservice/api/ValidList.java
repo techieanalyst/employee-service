@@ -8,9 +8,6 @@ import java.util.ListIterator;
 
 import javax.validation.Valid;
 
-import lombok.Getter;
-import lombok.Setter;
-
 public class ValidList<E> implements List<E> {
 
 	@Valid

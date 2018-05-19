@@ -33,6 +33,11 @@ import com.sgp.employeeservice.exception.EmployeeQueryException;
 import com.sgp.employeeservice.exception.EmployeeValidationException;
 import com.sgp.employeeservice.service.EmployeeService;
 
+/**
+ * Controller for employee related functions
+ * 
+ * @author Roen Ylagan
+ */
 @RestController
 @RequestMapping(path = "v1", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeController {
@@ -45,10 +50,31 @@ public class EmployeeController {
 	@Autowired
 	private Validator validator;
 
+	/**
+	 * Get all employees in the database
+	 * 
+	 * @return EmployeeListResponse
+	 */
+	@GetMapping(path = "/employees")
+	public ResponseEntity<? extends WebServiceResponse> getAllEmployees() {
+		logger.info("retrieving all employees");
+		List<EmployeeResponse> responses = employeeService.getAllEmployees();
+		logger.info("completed retrieving all employees");
+		return ResponseEntity.ok(new EmployeeListResponse(responses));
+	}	
+	
+	/**
+	 * Upload and save the employee entries of the file to the database
+	 * 
+	 * @param file file to be processed
+	 * @return EmployeeListResponse
+	 * @throws IOException file is empty
+	 * @throws EmployeeValidationException errors when validating entries of the file
+	 */
 	@PostMapping(path = "/employees/bulkupload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<? extends WebServiceResponse> saveEmployeesByBulk(@RequestParam("file") MultipartFile file)
 			throws IOException, EmployeeValidationException {
-		logger.info("saving data");
+		logger.info("processing multipart file" + file.getName());
 		InputStream inputStream = file.getInputStream();
 		if (!file.isEmpty()) {
 			ObjectMapper mapper = new ObjectMapper();
@@ -61,28 +87,41 @@ public class EmployeeController {
 				throw new EmployeeValidationException("Errors in validating inputs", constraintValidationResults);
 			}
 			List<EmployeeResponse> responses = employeeService.persistEmployeeRequestEntries(validList);
-			logger.info("saving data completed");
+			logger.info("completed processing multipart file");
 			return ResponseEntity.ok(new EmployeeListResponse(responses));
 		} else {
 			throw new IOException("the file to be processed is empty");
 		}
 	}
 
+	/**
+	 * Retrieve employees that are younger than the given age
+	 * 
+	 * @param age
+	 * @return
+	 * @throws EmployeeQueryException 
+	 */
 	@GetMapping(path = "/employees/younger/than/{age}")
 	public ResponseEntity<? extends WebServiceResponse> getEmployeesYoungerThanAge(@PathVariable Integer age)
 			throws EmployeeQueryException {
-		logger.info("younger than");
+		logger.info("retrieving employees that are younger than " + age);
 		List<EmployeeResponse> responses = employeeService.getAllEmployeesYoungerThanAge(age);
-		logger.info("younger than completed");
+		logger.info("retrieving completed");
 		return ResponseEntity.ok(new EmployeeListResponse(responses));
 	}
 
+	/**
+	 * Display employees in ascending order by the given attribute
+	 * @param attribute
+	 * @return
+	 * @throws EmployeeQueryException
+	 */
 	@GetMapping(path = "/employees/sorted/{attribute}")
 	public ResponseEntity<? extends WebServiceResponse> sortEmployeesByAttribute(@PathVariable String attribute)
 			throws EmployeeQueryException {
-		logger.info("sorted data");
+		logger.info("sorting employees in ascending order by " + attribute);
 		List<EmployeeResponse> responses = employeeService.getAllEmployeesSortedByAttribute(attribute);
-		logger.info("sorted data completed");
+		logger.info("sorted employees completed");
 		return ResponseEntity.ok(new EmployeeListResponse(responses));
 	}
 

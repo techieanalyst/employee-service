@@ -9,12 +9,15 @@ import java.util.List;
 
 import javax.validation.ConstraintViolation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,17 +33,22 @@ import com.sgp.employeeservice.api.EmployeeRequest;
 import com.sgp.employeeservice.api.ValidList;
 import com.sgp.employeeservice.api.WebServiceResponse;
 
-import lombok.extern.slf4j.Slf4j;
-
+/**
+ * Handler that grabs exceptions and return ApiError response body
+ * 
+ * @author Roen Ylagan
+ *
+ */
 @ControllerAdvice
-@Slf4j
 public class EmployeeServiceExceptionHandler {
 
+	private static Logger logger = LoggerFactory.getLogger(EmployeeServiceExceptionHandler.class);
+	
 	@ResponseStatus(BAD_REQUEST)
-	@ExceptionHandler({HttpMessageNotReadableException.class, JsonMappingException.class, JsonParseException.class, IOException.class})
+	@ExceptionHandler({HttpMediaTypeNotAcceptableException.class, HttpMessageNotReadableException.class, JsonMappingException.class, JsonParseException.class, IOException.class})
 	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleBadRequest(final Exception e) {
-//		log.error("Error occurred while processing the request", e);
+		logger.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", "See logs for more details");
 		return ResponseEntity.badRequest().body(apiError);
 	}
@@ -49,7 +57,7 @@ public class EmployeeServiceExceptionHandler {
 	@ExceptionHandler({EmployeeQueryException.class})
 	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleEmployeeQueryException(final EmployeeQueryException e) {
-//		log.error("Error occurred while processing the request", e);
+		logger.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", e.getLocalizedMessage());
 		return ResponseEntity.badRequest().body(apiError);
 	}
@@ -58,7 +66,7 @@ public class EmployeeServiceExceptionHandler {
 	@ExceptionHandler({MaxUploadSizeExceededException.class})
 	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleMaxUploadSizeExceededException(final MaxUploadSizeExceededException e) {
-//		log.error("Error occurred while processing the request", e);
+		logger.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", e.getLocalizedMessage());
 		return ResponseEntity.badRequest().body(apiError);
 	}
@@ -67,7 +75,7 @@ public class EmployeeServiceExceptionHandler {
 	@ExceptionHandler({MethodArgumentTypeMismatchException.class})
 	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
-//		log.error("Error occurred while processing the request", e);
+		logger.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(BAD_REQUEST, "Error occurred due to invalid request", "invalid input parameter");
 		return ResponseEntity.badRequest().body(apiError);
 	}
@@ -76,7 +84,7 @@ public class EmployeeServiceExceptionHandler {
 	@ExceptionHandler({InvalidDataAccessResourceUsageException.class, DataIntegrityViolationException.class})
 	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleInternalServerErrorExceptions(final Exception e) {
-//		log.error("Error occurred while processing the request", e);
+		logger.error("Error occurred while processing the request", e);
 		ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR, "Error occurred due to invalid request", "See logs for more details");
 		return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(apiError);
 	}
@@ -85,7 +93,7 @@ public class EmployeeServiceExceptionHandler {
 	@ExceptionHandler({MethodArgumentNotValidException.class, EmployeeValidationException.class})
 	@ResponseBody
 	public ResponseEntity<? extends WebServiceResponse> handleConstraintValidationException(final Exception ex) {
-//		log.error("Error occurred while processing the request", e);
+		logger.error("Error occurred while processing the request", ex);
 		List<String> errors = new ArrayList<String>();
 		if (ex instanceof MethodArgumentNotValidException) {
 			MethodArgumentNotValidException e = (MethodArgumentNotValidException) ex;

@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.sgp.employeeservice.api.EmployeeRequest;
 import com.sgp.employeeservice.api.EmployeeResponse;
+import com.sgp.employeeservice.controller.EmployeeController;
 import com.sgp.employeeservice.exception.EmployeeQueryException;
 import com.sgp.employeeservice.persistence.model.BasicInformation;
 import com.sgp.employeeservice.persistence.model.Employee;
@@ -30,7 +33,7 @@ public class EmployeeService {
 	@Autowired
 	@Qualifier("mvcConversionService")
 	private ConversionService conversionService;
-
+	
 	@Transactional
 	public List<EmployeeResponse> persistEmployeeRequestEntries(List<EmployeeRequest> requests) {
 		List<Employee> employees = employeeRepository.saveAll(requests.stream()
@@ -64,5 +67,11 @@ public class EmployeeService {
 		} catch (PropertyReferenceException e) {
 			throw new EmployeeQueryException("invalid parameter for sorting");
 		}
+	}
+	
+	public List<EmployeeResponse> getAllEmployees() {
+		List<Employee> employees = employeeRepository.findAll();
+		return employees.stream().map(employee -> conversionService.convert(employee, EmployeeResponse.class))
+				.collect(Collectors.toList());
 	}
 }

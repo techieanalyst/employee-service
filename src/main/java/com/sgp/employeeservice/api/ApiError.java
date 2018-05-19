@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.Getter;
-
 public class ApiError extends WebServiceResponse {
 	
 	private HttpStatus status;

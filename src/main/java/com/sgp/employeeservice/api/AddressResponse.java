@@ -1,8 +1,5 @@
 package com.sgp.employeeservice.api;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class AddressResponse {
 
 	private String street;
